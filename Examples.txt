@@ -1,0 +1,17 @@
+Some Examples:
+
+GET with -v
+java httpc get -v 'http://httpbin.org/get?course=networking&assignment=1'
+
+GET with -v and -o 
+java httpc get -v -o hello.txt 'http://httpbin.org/get?course=networking&assignment=1' 
+
+POST with -v, -h, -f:
+java httpc post -v -h Content-Type:application/json -f inline.txt http://httpbin.org/post
+
+POST with -h and -d:
+java httpc post -h Content-Type:application/json -d '{"Assignment": 1}' http://httpbin.org/post
+
+POST with -h, -d and -f (error)
+java httpc post -h Content-Type:application/json -d '{"Assignment": 1}' -f inline.txt http://httpbin.org/post
+

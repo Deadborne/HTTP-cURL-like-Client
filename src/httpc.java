@@ -7,7 +7,7 @@ public class httpc {
 	
 	private static String path = "", url = "", host = "", headers = "", data = "", dashOPath = ""; 
 	private static boolean contentLength = true;
-	private static boolean dashV = false, dashO = false;
+	private static boolean dashV = false, dashO = false, dashD = false, dashF = false;
 
 	public static void main(String[] args) {
 		
@@ -103,6 +103,7 @@ public class httpc {
 			//check for -d
 			if (args[i].toLowerCase().equals("-d")) {
 				
+				dashD = true;
 				int numberApostrophes = 0;
 				while (numberApostrophes < 2) {
 					if (i + 1 < args.length - 1) {
@@ -120,6 +121,7 @@ public class httpc {
 			//check for -f
 			if (args[i].toLowerCase().equals("-f")) {
 				i++;
+				dashF = true;
 				try {
 					bufread = new BufferedReader(new FileReader(args[i]));
 					StringBuilder stringBuild = new StringBuilder();
@@ -148,7 +150,13 @@ public class httpc {
 				}
 			}	
 		}
-			
+		
+		//We can't allow both -d and -f
+		if (dashD && dashF) {
+			System.out.println("Either [-d] or [-f] can be used but not both.");
+			System.exit(1);
+		}
+		
 		//finally, we parse the URL itself (the last argument)
 		url = args[args.length - 1];
 		
@@ -188,10 +196,9 @@ public class httpc {
 					}
 					
 					if (dashO) {
-						try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dashOPath), "utf-8"))){
+						Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dashOPath), "utf-8"));
 							writer.write(output);
-							writer.flush();
-						}
+							writer.close();		
 					}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
